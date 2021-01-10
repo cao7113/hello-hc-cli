@@ -1,0 +1,20 @@
+# https://taskfile.dev
+version: '3'
+  
+tasks:
+  hi:
+    cmds:
+    - echo hello from os
+
+  # https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started
+  install-vault:
+    desc: install hashicorp-vault
+    status:
+    - vault --version
+    cmds:
+    - brew tap hashicorp/tap
+    - brew install hashicorp/tap/vault
+  update-vault:
+    desc: update hashicor-vault
+    cmds:
+    - brew upgrade hashicorp/tap/vault

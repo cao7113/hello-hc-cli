@@ -1,1 +1,1 @@
-# Try Hashicorp Valut
+# Try [Hashicorp Vault](https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started)

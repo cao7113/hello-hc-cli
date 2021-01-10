@@ -1,7 +1,17 @@
 # https://taskfile.dev
 version: '3'
+  
 tasks:
   hello:
     cmds:
       - echo 'Hello World from Task!'
     silent: true
+  
+  enable-os:
+    status:
+    - test -f Taskfile_{{OS}}.yml
+    cmds:
+    - touch Taskfile_{{OS}}.yml
+
+includes:
+  os: ./Taskfile_{{OS}}.yml
