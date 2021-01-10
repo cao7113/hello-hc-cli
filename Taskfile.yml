@@ -1,7 +1,43 @@
 # https://taskfile.dev
 version: '3'
+
+env:
+  # export VAULT_ADDR='http://127.0.0.1:8200'
+  VAULT_ADDR: http://127.0.0.1:8200
   
 tasks:
+  dev-run:
+    desc: run vault server in dev mode locally
+    cmds:
+    - vault server -dev
+  status:
+    desc: show vault status
+    cmds:
+    - vault status
+
+  kv-hello:
+    desc: hello secret in vault https://learn.hashicorp.com/tutorials/vault/getting-started-first-secret?in=vault/getting-started
+    cmds:
+    # note scret/ match kv-v2 secret-engine, Vault presents these secrets engines similar to a filesystem
+    # By default, Vault enables Key/Value version2 secrets engine (kv-v2) at the path secret/ when running in dev mode
+    - vault kv put secret/hello foo=world excited=yes
+    - vault kv get -field=foo secret/hello
+    - vault kv get -format=json secret/hello
+    - vault kv get -format=json secret/hello | jq -r .data.data.foo
+    - vault kv list secret/
+    - vault kv delete secret/hello
+    - vault kv get -format=json secret/hello | jq -r .data.data.foo
+  try-se:
+    desc: try secret-engine. Vault behaves similarly to a virtual filesystem. The read/write/delete/list operations are forwarded to the corresponding secrets engine, and the secrets engine decides how to react to those operations.
+    cmds:
+    # equal to: vault secrets enable kv
+    - vault secrets enable -path=kv1 kv
+    # show path help
+    - vault path-help kv1
+    - vault secrets list
+    - vault secrets disable kv1/
+    - vault secrets list
+
   hello:
     cmds:
       - echo 'Hello World from Task!'
