@@ -1,4 +1,4 @@
-module github.com/cao7113/hello-hc-vault
+module github.com/cao7113/hello-hc-cli
 
 go 1.15
 

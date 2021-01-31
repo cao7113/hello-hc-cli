@@ -20,7 +20,7 @@ func main() {
 		},
 	}
 
-	c := cli.NewCLI("try-cli", "0.0.1.alpha")
+	c := cli.NewCLI("hello-hc-cli", "0.0.1")
 	c.Args = os.Args[1:]
 	c.AutocompleteInstall = "install-autocomplete"
 	c.AutocompleteUninstall = "uninstall-autocomplete"
