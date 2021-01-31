@@ -20,8 +20,10 @@ func main() {
 		},
 	}
 
-	c := cli.NewCLI("cli", "0.0.1.alpha")
+	c := cli.NewCLI("try-cli", "0.0.1.alpha")
 	c.Args = os.Args[1:]
+	c.AutocompleteInstall = "install-autocomplete"
+	c.AutocompleteUninstall = "uninstall-autocomplete"
 	c.Commands = map[string]cli.CommandFactory{
 		// default
 		"": func() (cli.Command, error) {
