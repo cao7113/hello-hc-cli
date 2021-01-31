@@ -22,8 +22,8 @@ func main() {
 
 	c := cli.NewCLI("hello-hc-cli", "0.0.1")
 	c.Args = os.Args[1:]
-	c.AutocompleteInstall = "install-autocomplete"
-	c.AutocompleteUninstall = "uninstall-autocomplete"
+	c.AutocompleteInstall = "install-autocomp"
+	c.AutocompleteUninstall = "uninstall-autocomp"
 	c.Commands = map[string]cli.CommandFactory{
 		// default
 		"": func() (cli.Command, error) {
