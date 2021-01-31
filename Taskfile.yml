@@ -4,9 +4,11 @@ version: '3'
 env:
   # export VAULT_ADDR='http://127.0.0.1:8200'
   VAULT_ADDR: http://127.0.0.1:8200
+vars:
+  DEV_BIN_VAULT: ../hc-vault/bin/vault
   
 tasks:
-  dev-run:
+  run:
     desc: run vault server in dev mode locally
     cmds:
     - vault server -dev
@@ -27,7 +29,7 @@ tasks:
     - vault kv list secret/
     - vault kv delete secret/hello
     - vault kv get -format=json secret/hello | jq -r .data.data.foo
-  try-se:
+  try-kv:
     desc: try secret-engine. Vault behaves similarly to a virtual filesystem. The read/write/delete/list operations are forwarded to the corresponding secrets engine, and the secrets engine decides how to react to those operations.
     cmds:
     # equal to: vault secrets enable kv
@@ -38,16 +40,39 @@ tasks:
     - vault secrets disable kv1/
     - vault secrets list
 
-  hello:
+  ui:
+    desc: open ui url, when you start the Vault server in dev mode, Vault UI is automatically enabled and ready to use.
     cmds:
-      - echo 'Hello World from Task!'
-    silent: true
-  
-  enable-os:
-    status:
-    - test -f Taskfile_{{OS}}.yml
+      - open http://127.0.0.1:8200/ui
+
+  # local source version
+  local-server:
+    desc: run local server
     cmds:
-    - touch Taskfile_{{OS}}.yml
+      - mkdir -p vault/data
+      - sh -c "{{.DEV_BIN_VAULT}} server -config=config.hcl"
+
+  config:
+    desc: generate sample config
+    cmds:
+      - |
+        tee config.hcl <<-EOF
+        ui = true
+        disable_mlock = true
+
+        storage "raft" {
+          path    = "./vault/data"
+          node_id = "node1"
+        }
+
+        listener "tcp" {
+          address     = "0.0.0.0:8200"
+          tls_disable = "true"
+        }
+
+        api_addr = "http://127.0.0.1:8200"
+        cluster_addr = "https://127.0.0.1:8201"
+        EOF
 
 includes:
   os: ./Taskfile_{{OS}}.yml
