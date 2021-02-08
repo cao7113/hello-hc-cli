@@ -22,12 +22,15 @@ func main() {
 
 	c := cli.NewCLI("hello-hc-cli", "0.0.1")
 	c.Args = os.Args[1:]
-	c.AutocompleteInstall = "install-autocomp"
-	c.AutocompleteUninstall = "uninstall-autocomp"
+	c.AutocompleteInstall = "auto-comp"
+	c.AutocompleteUninstall = "uninstall-auto-comp"
 	c.Commands = map[string]cli.CommandFactory{
-		// default
+		// default command when key is blank
 		"": func() (cli.Command, error) {
 			return &defaultCommand{ui}, nil
+		},
+		"flag": func() (cli.Command, error) {
+			return &flagCommand{ui}, nil
 		},
 		"bar": func() (cli.Command, error) {
 			return &barCommand{ui}, nil
@@ -68,6 +71,25 @@ func (c *defaultCommand) Run(args []string) int {
 	return 0
 }
 
+type flagCommand struct {
+	UI cli.Ui
+}
+
+func (c *flagCommand) Synopsis() string {
+	return "flag"
+}
+
+func (c *flagCommand) Help() string {
+	return `
+	flag long help
+`
+}
+
+func (c *flagCommand) Run(args []string) int {
+	logrus.Infof("flag run with %+v", args)
+	return 0
+}
+
 type barCommand struct {
 	UI cli.Ui
 }
@@ -77,7 +99,9 @@ func (c *barCommand) Synopsis() string {
 }
 
 func (c *barCommand) Help() string {
-	return `bar help`
+	return `
+	bar help
+`
 }
 
 func (c *barCommand) Run(args []string) int {
@@ -126,7 +150,7 @@ func (c *f1Command) Help() string {
 
 func (c *f1Command) Run(args []string) int {
 	logrus.Infof("foo f1 run with %+v", args)
-	return 0 // cli.RunResultHelp
+	return 0
 }
 
 type f2Command struct {
@@ -142,5 +166,5 @@ func (c *f2Command) Help() string {
 
 func (c *f2Command) Run(args []string) int {
 	logrus.Infof("foo f2 run with %+v", args)
-	return 0 // cli.RunResultHelp
+	return 0
 }

@@ -17,6 +17,13 @@ tasks:
     cmds:
     - vault status
 
+  cli-autocomp:
+    desc: cli auto-comp
+    cmds:
+      - go install
+      - hello-hc-cli -auto-comp
+      # - hello-hc-cli -de-auto-comp
+
   kv-hello:
     desc: hello secret in vault https://learn.hashicorp.com/tutorials/vault/getting-started-first-secret?in=vault/getting-started
     cmds:
